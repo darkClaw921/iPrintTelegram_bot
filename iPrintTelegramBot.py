@@ -31,7 +31,11 @@ def main():
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler('start', greet_user))
     #
+<<<<<<< HEAD
     
+=======
+    #
+>>>>>>> a9a382bb386ff11b8c79d2d8eb20adc4d8d8e301
     dp.add_handler(MessageHandler(Filters.text , talk_to_me))
 
     mybot.start_polling()
