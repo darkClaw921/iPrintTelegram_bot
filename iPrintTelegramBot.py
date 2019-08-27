@@ -8,7 +8,7 @@ logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s - %(message
                     level = logging.INFO, 
                     filename = 'bot.log'
                     )
-
+#
 def greet_user(bot, update):
     text = 'вызван /start'
     #print(text) # вывод текста в консоль
