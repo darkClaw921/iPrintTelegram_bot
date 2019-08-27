@@ -3,3 +3,4 @@ settings.py
 learn 1.py
 learnbot.py
 urlTelegramBot.py
+__pycache__/
