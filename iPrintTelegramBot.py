@@ -3,6 +3,8 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Regex
 import logging
 from telegram import ReplyKeyboardMarkup
 
+import os
+
 import settings
 
 logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s - %(message)s', 
@@ -28,6 +30,22 @@ def talk_to_me(bot, update):
 
 def send_documents(bot, update, user_data):
     update.message.reply_text(settings.Send_Document_Text)
+    os.makedirs('downloads', exist_ok = True)
+    document_file = bot.getFile(update.message.document.file_id)
+    print("документs")
+    #photo_file = bot.getFile(update.message.photo.file_id)
+    print("фото")
+    filename_document = os.path.join('downloads', '{}.txt'.format(document_file.file_id))
+    print("pfuheprf документа")
+    #filename_photo = os.path.join('downloads', '{}.jpg'.format(photo_file.file_id))
+    print("pfuheprf фото")
+    document_file.download(filename_document)
+    #photo_file.download(filename_photo)
+    #print(filename_photo)
+    #documents_file.download(filename)
+    #print(filename)
+    update.message.reply_text("файл сохранен")
+
 
 def main():
     mybot = Updater(settings.API_KEY) # API 
@@ -38,7 +56,10 @@ def main():
     dp.add_handler(CommandHandler('start', greet_user))
     dp.add_handler(RegexHandler('^(Прислать документы)$',greet_user, pass_user_data=True)) # начало строки^   конец$
     dp.add_handler(RegexHandler('^(привет)$',send_documents, pass_user_data=True)) # начало строки^   конец$
-
+    #dp.add_handler(MessageHandler(Filters.photo,send_documents,pass_user_data=True))
+    dp.add_handler(MessageHandler(Filters.document,send_documents,pass_user_data=True)) 
+    #dp.add_handler(MessageHandler(Filters.photo,send_documents,pass_user_data=True))
+    #dp.add_handler(MessageHandler(Filters.document,send_documents,pass_user_data=True))
     #
 #gg
     dp.add_handler(MessageHandler(Filters.text , talk_to_me))
