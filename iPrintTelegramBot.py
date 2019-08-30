@@ -30,23 +30,28 @@ def talk_to_me(bot, update):
 
 def send_documents(bot, update, user_data):
     update.message.reply_text(settings.Send_Document_Text)
-    os.makedirs('downloads', exist_ok = True)
+    os.makedirs('downloads', exist_ok = True)   
+    newFile = bot.get_file(update.message.document.file_id) # пытался взять формат файла 
+    print(newFile)
+    format_file = str(newFile)
+    format_file = format_file.split('.')
+    format_file = format_file[-1]
+    format_file = str(format_file)
+    format_file = format_file[:-2] 
+    update.message.reply_text('файл с расшерением .{}'.format(format_file))
     document_file = bot.getFile(update.message.document.file_id)
-    print("документs")
-    #photo_file = bot.getFile(update.message.photo.file_id)
-    print("фото")
-    filename_document = os.path.join('downloads', '{}.txt'.format(document_file.file_id))
-    print("pfuheprf документа")
-    #filename_photo = os.path.join('downloads', '{}.jpg'.format(photo_file.file_id))
-    print("pfuheprf фото")
+    filename_document = os.path.join('downloads', '{}.{}'.format(document_file.file_id, format_file))
+    print(filename_document)
     document_file.download(filename_document)
-    #photo_file.download(filename_photo)
-    #print(filename_photo)
-    #documents_file.download(filename)
-    #print(filename)
     update.message.reply_text("файл сохранен")
 
-
+def send_photo(bot, update, user_data):  # возможно можно удалить 
+    os.makedirs('downloads_photo', exist_ok = True)
+    photo_file = bot.getFile(update.message.photo[-1].file_id)
+    filename_photo = os.path.join('downloads_photo', '{}.jpg'.format(photo_file.file_id))
+    photo_file.download(filename_photo)
+    update.message.reply_text("фото сохранено")
+    
 def main():
     mybot = Updater(settings.API_KEY) # API 
     
@@ -55,12 +60,9 @@ def main():
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler('start', greet_user))
     dp.add_handler(RegexHandler('^(Прислать документы)$',greet_user, pass_user_data=True)) # начало строки^   конец$
-    dp.add_handler(RegexHandler('^(привет)$',send_documents, pass_user_data=True)) # начало строки^   конец$
-    #dp.add_handler(MessageHandler(Filters.photo,send_documents,pass_user_data=True))
+    dp.add_handler(RegexHandler('^(привет)$',send_documents, pass_user_data=True)) 
     dp.add_handler(MessageHandler(Filters.document,send_documents,pass_user_data=True)) 
-    #dp.add_handler(MessageHandler(Filters.photo,send_documents,pass_user_data=True))
-    #dp.add_handler(MessageHandler(Filters.document,send_documents,pass_user_data=True))
-    #
+    dp.add_handler(MessageHandler(Filters.photo,send_photo,pass_user_data=True))
 #gg
     dp.add_handler(MessageHandler(Filters.text , talk_to_me))
 
