@@ -2,6 +2,7 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, RegexHandler
 import logging
 from telegram import ReplyKeyboardMarkup
+from PyPDF2 import PdfFileReader
 
 import os
 
@@ -44,6 +45,13 @@ def send_documents(bot, update, user_data):
     print(filename_document)
     document_file.download(filename_document)
     update.message.reply_text("файл сохранен")
+    filename = '/Users/igorgerasimov/project/downloads/{}.{}'.format(document_file.file_id, format_file)
+    number_pages(filename)
+    money = number_pages
+    money = str(money)
+    #money = hex(money)
+    money = int([money], 2) #int([object], [основание системы счисления])
+    update.message.reply_text('У вас вышло {} страниц c вас {} руб.'.format(number_pages, money))
 
 def send_photo(bot, update, user_data):  # возможно можно удалить 
     os.makedirs('downloads_photo', exist_ok = True)
@@ -51,6 +59,20 @@ def send_photo(bot, update, user_data):  # возможно можно удал�
     filename_photo = os.path.join('downloads_photo', '{}.jpg'.format(photo_file.file_id))
     photo_file.download(filename_photo)
     update.message.reply_text("фото сохранено")
+    
+def number_pages(filename): # количество страниц в документах
+    pdf_document =  filename #"BQADAgADDQUAAuEwUEu4gKd5nOy26xYE.pdf"  
+    with open(pdf_document, 'rb') as filehandle:  
+        pdf = PdfFileReader(filehandle)
+        info = pdf.getDocumentInfo()
+        pages = pdf.getNumPages()   
+        #print (info)
+        #print(type(pages))
+        print ("number of pages: %i" % pages)   
+       # page1 = pdf.getPage(0)
+       # print(page1)
+       # print(page1.extractText())
+       
     
 def main():
     mybot = Updater(settings.API_KEY) # API 
