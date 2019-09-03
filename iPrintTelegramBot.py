@@ -46,12 +46,13 @@ def send_documents(bot, update, user_data):
     document_file.download(filename_document)
     update.message.reply_text("файл сохранен")
     filename = '/Users/igorgerasimov/project/downloads/{}.{}'.format(document_file.file_id, format_file)
-    number_pages(filename)
-    money = number_pages
-    money = str(money)
+    #pages = 0 # страници
+    print(number_pages(filename))
+    money = number_pages(filename)
+    #money = str(money)
     #money = hex(money)
-    money = int([money], 2) #int([object], [основание системы счисления])
-    update.message.reply_text('У вас вышло {} страниц c вас {} руб.'.format(number_pages, money))
+    #money = int([money], 2) #int([object], [основание системы счисления])
+    update.message.reply_text('У вас вышло {} страниц c вас {} руб.'.format(money, money * 3))
 
 def send_photo(bot, update, user_data):  # возможно можно удалить 
     os.makedirs('downloads_photo', exist_ok = True)
@@ -72,6 +73,7 @@ def number_pages(filename): # количество страниц в докум�
        # page1 = pdf.getPage(0)
        # print(page1)
        # print(page1.extractText())
+        return pages
        
     
 def main():
