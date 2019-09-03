@@ -12,12 +12,14 @@ logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s - %(message
                     level = logging.INFO, 
                     filename = 'bot.log'
                     )
+price_page = 3
+available_format_file = "pdf"
 #
 def greet_user(bot, update, user_data):
     text = 'вызван /start'
     #print(text) # вывод текста в консоль
     #update.message.reply_text(text) # Отправка текста ботом
-    my_keyboard = ReplyKeyboardMarkup([['Прислать документы', 'привет']])
+    my_keyboard = ReplyKeyboardMarkup([['Прислать документы', 'Привет', 'Инфо']])
     update.message.reply_text(text, reply_markup = my_keyboard)
     #logging.info(text)
 
@@ -29,8 +31,15 @@ def talk_to_me(bot, update):
     update.message.reply_text(user_text)
     #logging.info(user_text)
 
+def info_for_user(bot, update, user_data): 
+    info_bot = """Вданный момент бот находиться в бета-тесте, 
+в связи с этим для печати сайчас доступты следуюшие форматы файлов: """
+    update.message.reply_text(info_bot)
+    update.message.reply_text(available_format_file)
+
+
 def send_documents(bot, update, user_data):
-    update.message.reply_text(settings.Send_Document_Text)
+    update.message.reply_text(settings.Send_Document_Text) # ----------> добавить цикл while выход по 'все'
     os.makedirs('downloads', exist_ok = True)   
     newFile = bot.get_file(update.message.document.file_id) # пытался взять формат файла 
     print(newFile)
@@ -52,7 +61,7 @@ def send_documents(bot, update, user_data):
     #money = str(money)
     #money = hex(money)
     #money = int([money], 2) #int([object], [основание системы счисления])
-    update.message.reply_text('У вас вышло {} страниц c вас {} руб.'.format(money, money * 3))
+    update.message.reply_text('У вас вышло {} страниц c вас {} руб.'.format(money, money * price_page))
 
 def send_photo(bot, update, user_data):  # возможно можно удалить 
     os.makedirs('downloads_photo', exist_ok = True)
@@ -84,7 +93,8 @@ def main():
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler('start', greet_user))
     dp.add_handler(RegexHandler('^(Прислать документы)$',greet_user, pass_user_data=True)) # начало строки^   конец$
-    dp.add_handler(RegexHandler('^(привет)$',send_documents, pass_user_data=True)) 
+    dp.add_handler(RegexHandler('^(Привет)$',send_documents, pass_user_data=True)) 
+    dp.add_handler(RegexHandler('^(Инфо)$',info_for_user, pass_user_data=True))
     dp.add_handler(MessageHandler(Filters.document,send_documents,pass_user_data=True)) 
     dp.add_handler(MessageHandler(Filters.photo,send_photo,pass_user_data=True))
 #gg
@@ -93,6 +103,7 @@ def main():
     mybot.start_polling()
     mybot.idle()
     
+
 main()
 
 
