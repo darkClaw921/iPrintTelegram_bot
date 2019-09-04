@@ -19,7 +19,7 @@ def greet_user(bot, update, user_data):
     text = 'вызван /start'
     #print(text) # вывод текста в консоль
     #update.message.reply_text(text) # Отправка текста ботом
-    my_keyboard = ReplyKeyboardMarkup([['Прислать документы', 'Привет', 'Инфо']])
+    my_keyboard = ReplyKeyboardMarkup([['Прислать документы', 'Привет', 'Инфо']], resize_keyboard=True)
     update.message.reply_text(text, reply_markup = my_keyboard)
     #logging.info(text)
 
@@ -34,11 +34,19 @@ def talk_to_me(bot, update):
 def info_for_user(bot, update, user_data): 
     info_bot = """Вданный момент бот находиться в бета-тесте, 
 в связи с этим для печати сайчас доступты следуюшие форматы файлов: """
+    price_page 
     update.message.reply_text(info_bot)
     update.message.reply_text(available_format_file)
+    update.message.reply_text("Расценки печати на данный момент: ")
+    update.message.reply_text("Черно - белая печать: {} руб./лист".format(price_page))
+    update.message.reply_text("Цветная печать: {} руб./лист ".format(price_page))
 
 
 def send_documents(bot, update, user_data):
+    #my_keyboard2 = ReplyKeyboardMarkup([['Прислать документы', 'Все', 'Инфо']], resize_keyboard=True)
+    #update.message.reply_text( reply_markup = my_keyboard2)
+    #key_pass = update.message.text
+    #while key_pass != 'Все' :
     update.message.reply_text(settings.Send_Document_Text) # ----------> добавить цикл while выход по 'все'
     os.makedirs('downloads', exist_ok = True)   
     newFile = bot.get_file(update.message.document.file_id) # пытался взять формат файла 
@@ -62,6 +70,7 @@ def send_documents(bot, update, user_data):
     #money = hex(money)
     #money = int([money], 2) #int([object], [основание системы счисления])
     update.message.reply_text('У вас вышло {} страниц c вас {} руб.'.format(money, money * price_page))
+    update.message.reply_text('Забрать документы можно будет в профкоме с 11:30')
 
 def send_photo(bot, update, user_data):  # возможно можно удалить 
     os.makedirs('downloads_photo', exist_ok = True)
@@ -69,6 +78,7 @@ def send_photo(bot, update, user_data):  # возможно можно удал�
     filename_photo = os.path.join('downloads_photo', '{}.jpg'.format(photo_file.file_id))
     photo_file.download(filename_photo)
     update.message.reply_text("фото сохранено")
+    update.message.reply_text('Забрать документы можно будет в профкоме с 11:30')
     
 def number_pages(filename): # количество страниц в документах
     pdf_document =  filename #"BQADAgADDQUAAuEwUEu4gKd5nOy26xYE.pdf"  
