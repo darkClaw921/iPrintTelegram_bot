@@ -19,14 +19,14 @@ def greet_user(bot, update, user_data):
     text = 'вызван /start'
     #print(text) # вывод текста в консоль
     #update.message.reply_text(text) # Отправка текста ботом
-    my_keyboard = ReplyKeyboardMarkup([['Прислать документы', 'Привет', 'Инфо']], resize_keyboard=True)
+    my_keyboard = ReplyKeyboardMarkup([['Прислать документы', 'Инфо']], resize_keyboard=True)
     update.message.reply_text(text, reply_markup = my_keyboard)
     #logging.info(text)
 
 def talk_to_me(bot, update):
     user_text = update.message.text # считывание текста от пользователя
     #update.message.reply_text(user_text)
-    user_text = "Привет {}! Ты написал: {}".format(update.message.chat.first_name, update.message.text)
+    user_text = "Привет {}! Просто пришли документ и забери его после оплаты =) ".format(update.message.chat.first_name)
     #print(user_text)
     update.message.reply_text(user_text)
     #logging.info(user_text)
