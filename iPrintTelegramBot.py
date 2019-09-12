@@ -16,7 +16,7 @@ price_page = 3
 available_format_file = "pdf"
 #
 def greet_user(bot, update, user_data):
-    text = 'вызван /start'
+    text = 'Пришлите документы по одному'
     #print(text) # вывод текста в консоль
     #update.message.reply_text(text) # Отправка текста ботом
     my_keyboard = ReplyKeyboardMarkup([['Прислать документы', 'Инфо']], resize_keyboard=True)
@@ -40,6 +40,8 @@ def info_for_user(bot, update, user_data):
     update.message.reply_text("Расценки печати на данный момент: ")
     update.message.reply_text("Черно - белая печать: {} руб./лист".format(price_page))
     update.message.reply_text("Цветная печать: {} руб./лист ".format(price_page))
+    update.message.reply_text("Заявки на печать принемаются до 11:20 ")
+    update.message.reply_text("Документы можно забрать в профкоме с 11:30")
 
 
 def send_documents(bot, update, user_data):
@@ -47,7 +49,7 @@ def send_documents(bot, update, user_data):
     #update.message.reply_text( reply_markup = my_keyboard2)
     #key_pass = update.message.text
     #while key_pass != 'Все' :
-    update.message.reply_text(settings.Send_Document_Text) # ----------> добавить цикл while выход по 'все'
+    #update.message.reply_text(settings.Send_Document_Text) # ----------> добавить цикл while выход по 'все'
     os.makedirs('downloads', exist_ok = True)   
     newFile = bot.get_file(update.message.document.file_id) # пытался взять формат файла 
     print(newFile)
@@ -61,10 +63,11 @@ def send_documents(bot, update, user_data):
     filename_document = os.path.join('downloads', '{}.{}'.format(document_file.file_id, format_file))
     print(filename_document)
     document_file.download(filename_document)
-    update.message.reply_text("файл сохранен")
-    filename = '/Users/igorgerasimov/project/downloads/{}.{}'.format(document_file.file_id, format_file)
+    update.message.reply_text("Файл отправлен на печать")
+    filename = '/Users/igorgerasimov/project/downloads/{}.{}'.format(document_file.file_id, format_file) # название файла номер телефона пользователя 
+    logging.info(filename)
     #pages = 0 # страници
-    print(number_pages(filename))
+    #print(number_pages(filename))
     money = number_pages(filename)
     #money = str(money)
     #money = hex(money)
@@ -77,14 +80,15 @@ def send_photo(bot, update, user_data):  # возможно можно удал�
     photo_file = bot.getFile(update.message.photo[-1].file_id)
     filename_photo = os.path.join('downloads_photo', '{}.jpg'.format(photo_file.file_id))
     photo_file.download(filename_photo)
-    update.message.reply_text("фото сохранено")
+    update.message.reply_text("Фото отправлено на печать")
     update.message.reply_text('Забрать документы можно будет в профкоме с 11:30')
+    logging.info(filename_photo)
     
 def number_pages(filename): # количество страниц в документах
     pdf_document =  filename #"BQADAgADDQUAAuEwUEu4gKd5nOy26xYE.pdf"  
     with open(pdf_document, 'rb') as filehandle:  
         pdf = PdfFileReader(filehandle)
-        info = pdf.getDocumentInfo()
+        #info = pdf.getDocumentInfo()
         pages = pdf.getNumPages()   
         #print (info)
         #print(type(pages))
@@ -101,9 +105,8 @@ def main():
     #logging.info('бот запускается')
     
     dp = mybot.dispatcher
-    dp.add_handler(CommandHandler('start', greet_user))
+    dp.add_handler(CommandHandler('start', greet_user, pass_user_data=True))
     dp.add_handler(RegexHandler('^(Прислать документы)$',greet_user, pass_user_data=True)) # начало строки^   конец$
-    dp.add_handler(RegexHandler('^(Привет)$',send_documents, pass_user_data=True)) 
     dp.add_handler(RegexHandler('^(Инфо)$',info_for_user, pass_user_data=True))
     dp.add_handler(MessageHandler(Filters.document,send_documents,pass_user_data=True)) 
     dp.add_handler(MessageHandler(Filters.photo,send_photo,pass_user_data=True))

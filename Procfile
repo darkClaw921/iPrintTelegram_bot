@@ -1,1 +1,3 @@
-web:python3 iPrintTelegramBot.py
+pip itstall PyPDF2
+pip install telegram
+web:python iPrintTelegramBot.py
