@@ -12,6 +12,8 @@ logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s - %(message
                     level = logging.INFO, 
                     filename = 'bot.log'
                     )
+#PROXY = {'proxy_url': 'MTPROTO://kod.mtproto.ovh:443',
+ #       'urllib3_proxy_kwargs':{'username': '', 'password': '7ugtyOBaBOCzv7CEvZoLh7Vnb29nbGUuY29t'} }
 price_page = 3
 available_format_file = "pdf"
 #
@@ -100,7 +102,7 @@ def number_pages(filename): # количество страниц в докум�
        
     
 def main():
-    mybot = Updater(settings.API_KEY) # API 
+    mybot = Updater(settings.API_KEY)# request_kwargs=PROXY) # API 
     
     #logging.info('бот запускается')
     
