@@ -29,16 +29,21 @@ def talk_to_me(bot, update):
     user_text = update.message.text # считывание текста от пользователя
     #update.message.reply_text(user_text)
     user_text = "Привет {}! Просто пришли документ и забери его после оплаты =) ".format(update.message.chat.first_name)
+    print(update.message.chat)
+    print('{} отправил на печать файл {}'.format(update.message.chat.username))
     #print(user_text)
     update.message.reply_text(user_text)
     #logging.info(user_text)
 
 def info_for_user(bot, update, user_data): 
-    info_bot = """Вданный момент бот находиться в бета-тесте, 
-в связи с этим для печати сайчас доступты следуюшие форматы файлов: """
+    info_bot = """Внимание! для корректной печати лучшее всего 
+отправлять на печать файлы .pdf
+Телефон для связи +79308316689 или https://vk.com/id105431859
+Вданный момент бот находиться в бета-тесте, 
+в связи с этим для печати сайчас доступты следуюшие форматы файлов: .pdf """
     price_page 
     update.message.reply_text(info_bot)
-    update.message.reply_text(available_format_file)
+    #update.message.reply_text(available_format_file)
     update.message.reply_text("Расценки печати на данный момент: ")
     update.message.reply_text("Черно - белая печать: {} руб./лист".format(price_page))
     update.message.reply_text("Цветная печать: {} руб./лист ".format(price_page))
@@ -62,11 +67,12 @@ def send_documents(bot, update, user_data):
     format_file = format_file[:-2] 
     update.message.reply_text('файл с расшерением .{}'.format(format_file))
     document_file = bot.getFile(update.message.document.file_id)
-    filename_document = os.path.join('downloads', '{}.{}'.format(document_file.file_id, format_file))
+    filename_document = os.path.join('downloads', '{}.{}'.format(update.message.chat.username + document_file.file_name, format_file)) #document_file.file_name
     print(filename_document)
+    print(update.message.document)
     document_file.download(filename_document)
     update.message.reply_text("Файл отправлен на печать")
-    filename = '/Users/igorgerasimov/project/downloads/{}.{}'.format(document_file.file_id, format_file) # название файла номер телефона пользователя 
+    filename = '/Users/igorgerasimov/project/downloads/{}.{}'.format(update.message.chat.username + document_file.file_name, format_file) # название файла номер телефона пользователя 
     logging.info(filename)
     #pages = 0 # страници
     #print(number_pages(filename))
